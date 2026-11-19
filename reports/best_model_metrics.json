@@ -1,0 +1,30 @@
+{
+    "selected_model": "Gradient Boosting",
+    "selection_metric": "Macro F1",
+    "tie_breaker": "Balanced Accuracy",
+    "validation_metrics": {
+        "accuracy": 0.9833333333333333,
+        "balanced_accuracy": 0.9434017218397525,
+        "macro_f1": 0.9409698567380508,
+        "weighted_f1": 0.9834048635177343
+    },
+    "tuned_validation_metrics": {
+        "accuracy": 0.9833333333333333,
+        "balanced_accuracy": 0.9434017218397525,
+        "macro_f1": 0.9409698567380508,
+        "weighted_f1": 0.9834048635177343
+    },
+    "best_hyperparameters": {
+        "classifier__learning_rate": 0.03,
+        "classifier__max_depth": 3,
+        "classifier__min_samples_split": 2,
+        "classifier__n_estimators": 200
+    },
+    "cross_validation_macro_f1": 0.945703311484054,
+    "test_metrics": {
+        "accuracy": 0.9733333333333334,
+        "balanced_accuracy": 0.9275300507564861,
+        "macro_f1": 0.9343708827404479,
+        "weighted_f1": 0.9733301767676767
+    }
+}

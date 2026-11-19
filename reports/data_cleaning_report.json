@@ -1,0 +1,96 @@
+{
+    "rows_before_cleaning": 4500,
+    "columns_before_cleaning": 4500,
+    "duplicate_rows_removed": 0,
+    "missing_target_rows_removed": 0,
+    "repeated_student_ids": 0,
+    "numeric_conversion_errors": {
+        "Perceived_Stress_Score": 0,
+        "Daily_Usage_Hours": 0,
+        "Academic_Performance_GPA": 0,
+        "Sleep_Duration_Hours": 0,
+        "Weekend_Extra_Hours": 0,
+        "Mental_Health_Index": 0,
+        "Age": 0,
+        "Sleep_Quality_Score": 0
+    },
+    "infinite_values": {
+        "Perceived_Stress_Score": 0,
+        "Daily_Usage_Hours": 0,
+        "Academic_Performance_GPA": 0,
+        "Sleep_Duration_Hours": 0,
+        "Weekend_Extra_Hours": 0,
+        "Mental_Health_Index": 0,
+        "Age": 0,
+        "Sleep_Quality_Score": 0
+    },
+    "invalid_numeric_values": {
+        "Age": 0,
+        "Daily_Usage_Hours": 0,
+        "Weekend_Extra_Hours": 0,
+        "Sleep_Duration_Hours": 0,
+        "Sleep_Quality_Score": 0,
+        "Perceived_Stress_Score": 0,
+        "Mental_Health_Index": 0,
+        "Academic_Performance_GPA": 0
+    },
+    "invalid_boolean_values": 0,
+    "missing_boolean_values": 0,
+    "missing_values_by_column": {
+        "Perceived_Stress_Score": 46,
+        "Academic_Performance_GPA": 85
+    },
+    "total_missing_values": 131,
+    "constant_columns": [],
+    "target_distribution": {
+        "Beneficial": 3681,
+        "Neutral": 654,
+        "Negative": 165
+    },
+    "categorical_distribution": {
+        "Gender": {
+            "Female": 2234,
+            "Male": 2051,
+            "Non-Binary": 122,
+            "Prefer not to say": 93
+        },
+        "Device_Type": {
+            "Smartphone": 3775,
+            "Laptop/PC": 596,
+            "Tablet": 129
+        },
+        "Primary_Platform": {
+            "Instagram": 1453,
+            "TikTok": 1226,
+            "YouTube": 818,
+            "Snapchat": 472,
+            "Reddit": 229,
+            "X (Twitter)": 206,
+            "LinkedIn": 96
+        },
+        "Academic_Level": {
+            "Undergraduate": 2777,
+            "High School": 1477,
+            "Postgraduate": 246
+        },
+        "Social_Comparison_Frequency": {
+            "Sometimes": 1594,
+            "Frequently": 1248,
+            "Rarely": 766,
+            "Always": 632,
+            "Never": 260
+        }
+    },
+    "rows_after_cleaning": 4500,
+    "columns_after_cleaning": 16,
+    "rows_removed": 0,
+    "missing_values_after_cleaning": 131,
+    "missing_values_before_imputation": 131,
+    "missing_values_after_imputation": 0,
+    "imputation_method": {
+        "numerical": "Median",
+        "categorical": "Most Frequent",
+        "statistics_source": "Training + Validation data only",
+        "model_imputation": "Performed independently inside the sklearn pipeline"
+    }
+}

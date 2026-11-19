@@ -1,0 +1,33 @@
+{
+    "model_version": 6,
+    "model_name": "Gradient Boosting",
+    "target": "Overall_Impact",
+    "accuracy": 0.9744444444444444,
+    "macro_f1": 0.931543628578669,
+    "balanced_accuracy": 0.9300745800185727,
+    "weighted_f1": 0.9745171757462864,
+    "validation_macro_f1": 0.9409698567380508,
+    "trained_at": "2026-11-18T12:20:49",
+    "feature_columns": [
+        "Academic_Level",
+        "Academic_Performance_GPA",
+        "Age",
+        "Daily_Usage_Hours",
+        "Device_Type",
+        "Gender",
+        "Late_Night_Usage",
+        "Late_Night_Usage_Hours_Flag",
+        "Mental_Health_Index",
+        "Perceived_Stress_Score",
+        "Primary_Platform",
+        "Sleep_Duration_Hours",
+        "Sleep_Quality_Score",
+        "Social_Comparison_Frequency",
+        "Total_Usage_Hours",
+        "Usage_to_Sleep_Ratio",
+        "Weekend_Extra_Hours"
+    ],
+    "training_records": 3600,
+    "validation_records": 720,
+    "test_records": 900
+}

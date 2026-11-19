@@ -1,0 +1,4 @@
+-r requirements.txt
+
+# Testing framework
+pytest>=8.0.0
