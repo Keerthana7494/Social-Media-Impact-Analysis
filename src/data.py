@@ -764,7 +764,7 @@ def prepare_features(data):
 
     X = data[selected_features].copy()
 
-    y = data[ID_COLUMN].copy()
+    y = data[TARGET].copy()
 
     # Final target and ID leakage protection.
     forbidden_columns = {
