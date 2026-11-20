@@ -1,0 +1,42 @@
+{
+    "model_version": 9,
+    "model_name": "Gradient Boosting",
+    "hyperparameter_tuning": "GridSearchCV",
+    "best_hyperparameters": {
+        "classifier__learning_rate": 0.03,
+        "classifier__max_depth": 3,
+        "classifier__min_samples_split": 2,
+        "classifier__n_estimators": 200
+    },
+    "cross_validation_macro_f1": 0.945703311484054,
+    "target": "Overall_Impact",
+    "accuracy": 0.9733333333333334,
+    "macro_f1": 0.9343708827404479,
+    "balanced_accuracy": 0.9275300507564861,
+    "weighted_f1": 0.9733301767676767,
+    "validation_macro_f1": 0.9409698567380508,
+    "training_macro_f1": 0.9992482826249244,
+    "trained_at": "2026-11-20T10:22:29",
+    "feature_columns": [
+        "Academic_Level",
+        "Academic_Performance_GPA",
+        "Age",
+        "Daily_Usage_Hours",
+        "Device_Type",
+        "Gender",
+        "Late_Night_Usage",
+        "Late_Night_Usage_Hours_Flag",
+        "Mental_Health_Index",
+        "Perceived_Stress_Score",
+        "Primary_Platform",
+        "Sleep_Duration_Hours",
+        "Sleep_Quality_Score",
+        "Social_Comparison_Frequency",
+        "Total_Usage_Hours",
+        "Usage_to_Sleep_Ratio",
+        "Weekend_Extra_Hours"
+    ],
+    "training_records": 3600,
+    "validation_records": 720,
+    "test_records": 900
+}

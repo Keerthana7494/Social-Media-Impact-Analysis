@@ -479,6 +479,88 @@ def save_model_comparison_chart(results_df):
 
 
 # ============================================================
+# 5A. TRAINING VS TESTING PERFORMANCE / OVERFITTING CHECK
+# ============================================================
+
+def save_train_test_comparison_chart(train_metrics, test_metrics):
+    """Save a chart comparing fit-data scores with unseen test scores."""
+
+    figures_dir = REPORTS_DIR / "figures"
+    figures_dir.mkdir(parents=True, exist_ok=True)
+
+    metric_names = ["Accuracy", "Macro F1"]
+    train_scores = [train_metrics["accuracy"], train_metrics["macro_f1"]]
+    test_scores = [test_metrics["accuracy"], test_metrics["macro_f1"]]
+
+    x_positions = list(range(len(metric_names)))
+    bar_width = 0.35
+
+    plt.figure(figsize=(9, 5))
+
+    train_bars = plt.bar(
+        [x - bar_width / 2 for x in x_positions],
+        train_scores,
+        bar_width,
+        label="Training + Validation"
+    )
+    test_bars = plt.bar(
+        [x + bar_width / 2 for x in x_positions],
+        test_scores,
+        bar_width,
+        label="Unseen Test"
+    )
+
+    for bars in (train_bars, test_bars):
+        for bar in bars:
+            height = bar.get_height()
+            plt.text(
+                bar.get_x() + bar.get_width() / 2,
+                height + 0.015,
+                f"{height:.3f}",
+                ha="center",
+                va="bottom"
+            )
+
+    plt.xticks(x_positions, metric_names)
+    plt.ylim(0, 1.12)
+    plt.ylabel("Score")
+    plt.title("Final Model: Training vs Test Performance")
+    plt.legend()
+    plt.grid(axis="y", linestyle="--", alpha=0.4)
+    plt.tight_layout()
+
+    chart_path = figures_dir / "train_test_comparison.png"
+    plt.savefig(chart_path, dpi=300, bbox_inches="tight")
+    plt.close()
+
+    print("Train/test comparison chart saved:", chart_path)
+    return chart_path
+
+
+def interpret_generalization_gap(train_metrics, test_metrics):
+    """
+    Calculate the Macro F1 train-test gap.
+    Thresholds are practical warning indicators, not universal rules.
+    """
+
+    gap = train_metrics["macro_f1"] - test_metrics["macro_f1"]
+
+    if gap > 0.10:
+        interpretation = "Possible overfitting: large training-test gap."
+    elif gap > 0.05:
+        interpretation = "Warning: moderate training-test gap."
+    elif gap >= 0:
+        interpretation = "No large training-test gap detected."
+    else:
+        interpretation = (
+            "Test score is higher than training score; "
+            "check dataset size and split variation."
+        )
+
+    return float(gap), interpretation
+
+
+# ============================================================
 # 6. SAVE JSON REPORT
 # ============================================================
 
@@ -696,32 +778,49 @@ def train_and_compare_models(
 
 def get_parameter_grid(model_name):
     """Return a modest, model-specific GridSearchCV parameter grid."""
+    
     grids = {
-        "Logistic Regression": {
-            "classifier__C": [0.1, 1.0, 10.0],
-            "classifier__solver": ["lbfgs"],
-        },
-        "Decision Tree": {
-            "classifier__max_depth": [None, 5, 10, 20],
-            "classifier__min_samples_split": [2, 4, 8],
-            "classifier__min_samples_leaf": [1, 2, 4],
-        },
-        "Random Forest": {
-            "classifier__n_estimators": [150, 250, 350],
-            "classifier__max_depth": [None, 10, 20],
-            "classifier__min_samples_split": [2, 4],
-            "classifier__min_samples_leaf": [1, 2],
-        },
-        "Gradient Boosting": {
-            "classifier__n_estimators": [100, 150, 200],
-            "classifier__learning_rate": [0.03, 0.05, 0.1],
-            "classifier__max_depth": [2, 3, 4],
-            "classifier__min_samples_split": [2, 4],
-        },
-        "Dummy Classifier": {
-            "classifier__strategy": ["most_frequent", "prior", "stratified"],
-        },
-    }
+    "Logistic Regression": {
+        "classifier__C": [0.1, 1.0, 10.0],
+        "classifier__solver": ["lbfgs"],
+        "classifier__class_weight": [None, "balanced"],
+    },
+
+    "Decision Tree": {
+        "classifier__max_depth": [5, 10, None],
+        "classifier__min_samples_split": [2, 5, 10],
+        "classifier__min_samples_leaf": [1, 2, 4],
+        "classifier__class_weight": [None, "balanced"],
+    },
+
+    "Random Forest": {
+        "classifier__n_estimators": [150, 250],
+        "classifier__max_depth": [None, 10, 20],
+        "classifier__min_samples_split": [2, 5],
+        "classifier__min_samples_leaf": [1, 2, 4],
+        "classifier__class_weight": [None, "balanced"],
+    },
+
+    "Gradient Boosting": {
+    "classifier__n_estimators": [50, 100, 150],
+    "classifier__learning_rate": [0.01, 0.03, 0.05],
+    "classifier__max_depth": [1, 2, 3],
+    "classifier__min_samples_split": [5, 10, 15],
+    "classifier__min_samples_leaf": [3, 5, 8],
+    "classifier__subsample": [0.7, 0.8, 0.9],
+    "classifier__max_features": ["sqrt", None],
+},
+
+    "Dummy Classifier": {
+        "classifier__strategy": [
+            "most_frequent",
+            "prior",
+            "stratified",
+        ],
+    },
+
+
+}
     if model_name not in grids:
         raise ValueError(f"No hyperparameter grid configured for {model_name}.")
     return grids[model_name]
@@ -1201,31 +1300,45 @@ def run_training(
     )
 
     # --------------------------------------------------------
-    # STEP 13: FINAL TEST EVALUATION
+    # STEP 13: TRAINING + VALIDATION AND FINAL TEST EVALUATION
     # --------------------------------------------------------
 
-    print("\nSTEP 13: Final evaluation on test dataset...")
+    print("\nSTEP 13: Evaluating final model...")
 
-    # The test dataset is used only here for final evaluation.
-    best_predictions = final_model.predict(
-        X_test
+    # This is the same combined dataset used to fit the final model.
+    train_predictions = final_model.predict(X_train_val)
+    train_metrics = calculate_metrics(y_train_val, train_predictions)
+
+    # The test dataset remains unseen during fitting and tuning.
+    best_predictions = final_model.predict(X_test)
+    final_metrics = calculate_metrics(y_test, best_predictions)
+
+    generalization_gap, overfitting_interpretation = (
+        interpret_generalization_gap(train_metrics, final_metrics)
     )
 
-    final_metrics = calculate_metrics(
-        y_test,
-        best_predictions
+    train_test_chart_path = save_train_test_comparison_chart(
+        train_metrics,
+        final_metrics
     )
-
     final_test_chart_path = save_final_test_metrics_chart(final_metrics)
+
+    print("\nTRAINING + VALIDATION METRICS")
+    print("-----------------------------")
+    for metric, value in train_metrics.items():
+        print(f"{metric}: {value:.4f}")
 
     print("\nFINAL TEST METRICS")
     print("------------------")
-
     for metric, value in final_metrics.items():
+        print(f"{metric}: {value:.4f}")
 
-        print(
-            f"{metric}: {value:.4f}"
-        )
+    print("\nOVERFITTING CHECK")
+    print("-----------------")
+    print(f"Training Macro F1: {train_metrics['macro_f1']:.4f}")
+    print(f"Test Macro F1:     {final_metrics['macro_f1']:.4f}")
+    print(f"Generalization gap: {generalization_gap:.4f}")
+    print("Interpretation:", overfitting_interpretation)
 
     # Classification report
     labels = sorted(
@@ -1298,6 +1411,15 @@ def run_training(
         "validation_metrics": best_validation_metrics,
 
         "tuned_validation_metrics": tuned_validation_metrics,
+
+        "training_plus_validation_metrics": {
+            key: float(value)
+            for key, value in train_metrics.items()
+        },
+
+        "generalization_gap_macro_f1": generalization_gap,
+
+        "overfitting_interpretation": overfitting_interpretation,
 
         "best_hyperparameters": search.best_params_,
 
@@ -1372,15 +1494,21 @@ def run_training(
             len(X_test)
         )
 
-        # Prefix test metrics to distinguish them from
-        # validation metrics logged during model comparison.
+        # Log fit-data and test metrics separately in MLflow.
         mlflow.log_metrics({
-
-            f"test_{metric}": float(value)
-
-            for metric, value in final_metrics.items()
-
+            f"train_validation_{metric}": float(value)
+            for metric, value in train_metrics.items()
         })
+
+        mlflow.log_metrics({
+            f"test_{metric}": float(value)
+            for metric, value in final_metrics.items()
+        })
+
+        mlflow.log_metric(
+            "generalization_gap_macro_f1",
+            generalization_gap
+        )
 
         # Log the final retrained model.
         mlflow.sklearn.log_model(
@@ -1407,6 +1535,8 @@ def run_training(
             REPORTS_DIR / "best_hyperparameters.json",
 
             final_test_chart_path,
+
+            train_test_chart_path,
 
             FIGURES_DIR / "confusion_matrix.png",
 
@@ -1502,6 +1632,14 @@ def run_training(
         "validation_macro_f1": float(
             best_validation_metrics["macro_f1"]
         ),
+
+        "training_plus_validation_macro_f1": float(
+            train_metrics["macro_f1"]
+        ),
+
+        "generalization_gap_macro_f1": generalization_gap,
+
+        "overfitting_interpretation": overfitting_interpretation,
 
         "trained_at": datetime.now().isoformat(
             timespec="seconds"
@@ -1599,6 +1737,14 @@ def run_training(
         "before_after_tuning": before_after_df,
 
         "best_metrics": final_metrics,
+
+        "training_metrics": train_metrics,
+
+        "generalization_gap": generalization_gap,
+
+        "overfitting_interpretation": overfitting_interpretation,
+
+        "train_test_chart": str(train_test_chart_path),
 
         "model_path": str(model_path),
 

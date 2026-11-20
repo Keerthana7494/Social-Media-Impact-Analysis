@@ -174,7 +174,7 @@ Undergraduate,3.15,19.0,6.9,Smartphone,Male,False,0.0,77.0,8.0,YouTube,6.2,2.0,F
 High School,4.0,21.0,1.5,Smartphone,Male,True,1.5,97.0,6.0,TikTok,8.1,4.0,Rarely,4.1,0.1851851851851852,2.6,Beneficial,Beneficial
 Undergraduate,3.78,20.0,4.1,Smartphone,Female,False,0.0,84.0,16.0,Instagram,6.7,4.0,Rarely,4.1,0.6119402985074626,0.0,Beneficial,Beneficial
 Undergraduate,3.84,19.0,3.9,Smartphone,Female,True,3.9,86.0,6.0,Instagram,7.2,3.0,Sometimes,5.4,0.5416666666666666,1.5,Beneficial,Beneficial
-Undergraduate,3.64,19.0,8.0,Smartphone,Male,False,0.0,68.0,28.0,Reddit,5.1,2.0,Sometimes,10.9,1.5686274509803924,2.9,Neutral,Beneficial
+Undergraduate,3.64,19.0,8.0,Smartphone,Male,False,0.0,68.0,28.0,Reddit,5.1,2.0,Sometimes,10.9,1.5686274509803924,2.9,Neutral,Neutral
 Undergraduate,2.94,23.0,4.5,Smartphone,Female,True,4.5,88.0,13.0,Instagram,7.5,3.0,Sometimes,6.9,0.6,2.4,Beneficial,Beneficial
 Undergraduate,3.35,19.0,4.6,Smartphone,Male,True,4.6,90.0,12.0,YouTube,6.2,3.0,Sometimes,7.1,0.7419354838709676,2.5,Beneficial,Beneficial
 Undergraduate,3.13,18.0,7.3,Smartphone,Female,True,7.3,64.0,13.0,Instagram,6.2,2.0,Sometimes,8.8,1.1774193548387095,1.5,Beneficial,Beneficial
@@ -213,7 +213,7 @@ Undergraduate,3.57,21.0,2.3,Smartphone,Male,False,0.0,98.0,11.0,Instagram,8.1,5.
 High School,2.85,18.0,11.6,Smartphone,Male,True,11.6,68.0,20.0,TikTok,5.1,1.0,Frequently,12.5,2.2745098039215685,0.9,Neutral,Neutral
 Undergraduate,3.88,20.0,2.4,Smartphone,Female,True,2.4,98.0,3.0,TikTok,9.1,4.0,Frequently,4.8,0.26373626373626374,2.4,Beneficial,Beneficial
 High School,4.0,15.0,3.1,Smartphone,Male,True,3.1,84.0,15.0,YouTube,6.5,3.0,Always,4.7,0.47692307692307695,1.6,Beneficial,Beneficial
-High School,3.5,17.0,8.8,Smartphone,Prefer not to say,True,8.8,68.0,21.0,Instagram,6.2,1.0,Frequently,11.3,1.4193548387096775,2.5,Beneficial,Neutral
+High School,3.5,17.0,8.8,Smartphone,Prefer not to say,True,8.8,68.0,21.0,Instagram,6.2,1.0,Frequently,11.3,1.4193548387096775,2.5,Beneficial,Beneficial
 Undergraduate,3.3,18.0,7.2,Smartphone,Female,False,0.0,62.0,20.0,LinkedIn,6.9,3.0,Sometimes,8.4,1.0434782608695652,1.2,Neutral,Neutral
 High School,3.88,15.0,3.0,Smartphone,Non-Binary,False,0.0,88.0,10.0,TikTok,6.9,3.0,Rarely,3.8,0.43478260869565216,0.8,Beneficial,Beneficial
 High School,3.36,15.0,4.3,Smartphone,Female,True,4.3,71.0,16.0,Instagram,6.2,2.0,Frequently,5.3,0.6935483870967741,1.0,Beneficial,Beneficial
@@ -343,7 +343,7 @@ Undergraduate,3.48,18.0,4.0,Smartphone,Female,True,4.0,84.0,16.0,TikTok,7.7,5.0,
 High School,2.88,17.0,9.8,Smartphone,Female,True,9.8,55.0,28.0,TikTok,5.5,1.0,Frequently,12.4,1.781818181818182,2.6,Neutral,Neutral
 Undergraduate,3.65,18.0,3.5,Smartphone,Female,False,0.0,74.0,11.0,YouTube,6.4,3.0,Frequently,5.3,0.546875,1.8,Beneficial,Beneficial
 Undergraduate,3.59,20.0,5.1,Smartphone,Male,True,5.1,82.0,11.0,TikTok,6.3,2.0,Rarely,7.699999999999999,0.8095238095238095,2.6,Beneficial,Beneficial
-Undergraduate,2.31,21.0,14.0,Smartphone,Male,False,0.0,50.0,24.0,X (Twitter),4.3,1.0,Always,14.6,3.255813953488372,0.6,Negative,Neutral
+Undergraduate,2.31,21.0,14.0,Smartphone,Male,False,0.0,50.0,24.0,X (Twitter),4.3,1.0,Always,14.6,3.255813953488372,0.6,Negative,Negative
 Undergraduate,2.99,19.0,4.6,Smartphone,Female,False,0.0,72.0,19.0,Snapchat,6.4,2.0,Frequently,5.3,0.7187499999999999,0.7,Neutral,Beneficial
 Undergraduate,3.41,18.0,2.5,Smartphone,Male,False,0.0,90.0,5.0,YouTube,7.7,3.0,Always,3.5,0.3246753246753247,1.0,Beneficial,Beneficial
 Undergraduate,2.38,18.0,12.2,Smartphone,Male,True,12.2,45.0,25.0,Reddit,4.9,1.0,Sometimes,12.2,2.4897959183673466,0.0,Negative,Negative
@@ -412,7 +412,7 @@ High School,3.32,17.0,5.2,Smartphone,Female,True,5.2,79.0,24.0,YouTube,5.7,2.0,F
 Undergraduate,3.63,20.0,4.8,Laptop/PC,Female,False,0.0,85.0,15.0,YouTube,7.7,3.0,Rarely,7.1,0.6233766233766234,2.3,Beneficial,Beneficial
 Undergraduate,3.57,20.0,5.8,Laptop/PC,Non-Binary,True,5.8,81.0,10.0,TikTok,7.9,3.0,Rarely,8.0,0.7341772151898733,2.2,Beneficial,Beneficial
 Undergraduate,3.75,20.0,4.5,Smartphone,Female,False,0.0,92.0,8.0,Reddit,7.1,2.0,Always,6.9,0.6338028169014085,2.4,Beneficial,Beneficial
-High School,2.79,17.0,8.7,Smartphone,Prefer not to say,True,8.7,69.0,14.0,Instagram,3.8,1.0,Rarely,10.7,2.289473684210526,2.0,Beneficial,Beneficial
+High School,2.79,17.0,8.7,Smartphone,Prefer not to say,True,8.7,69.0,14.0,Instagram,3.8,1.0,Rarely,10.7,2.289473684210526,2.0,Beneficial,Neutral
 Undergraduate,3.5,18.0,5.6,Smartphone,Female,True,5.6,85.0,8.0,YouTube,7.8,3.0,Frequently,7.199999999999999,0.717948717948718,1.6,Beneficial,Beneficial
 Undergraduate,3.36,19.0,6.6,Smartphone,Female,False,0.0,83.0,12.0,Snapchat,6.8,4.0,Rarely,7.6,0.9705882352941176,1.0,Beneficial,Beneficial
 Undergraduate,3.23,19.0,6.4,Laptop/PC,Female,False,0.0,66.0,22.0,YouTube,5.1,2.0,Frequently,8.200000000000001,1.254901960784314,1.8,Neutral,Neutral

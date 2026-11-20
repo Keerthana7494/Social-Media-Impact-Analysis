@@ -6,23 +6,23 @@
     "repeated_student_ids": 0,
     "numeric_conversion_errors": {
         "Perceived_Stress_Score": 0,
-        "Daily_Usage_Hours": 0,
-        "Academic_Performance_GPA": 0,
         "Sleep_Duration_Hours": 0,
+        "Age": 0,
+        "Daily_Usage_Hours": 0,
+        "Sleep_Quality_Score": 0,
         "Weekend_Extra_Hours": 0,
         "Mental_Health_Index": 0,
-        "Age": 0,
-        "Sleep_Quality_Score": 0
+        "Academic_Performance_GPA": 0
     },
     "infinite_values": {
         "Perceived_Stress_Score": 0,
-        "Daily_Usage_Hours": 0,
-        "Academic_Performance_GPA": 0,
         "Sleep_Duration_Hours": 0,
+        "Age": 0,
+        "Daily_Usage_Hours": 0,
+        "Sleep_Quality_Score": 0,
         "Weekend_Extra_Hours": 0,
         "Mental_Health_Index": 0,
-        "Age": 0,
-        "Sleep_Quality_Score": 0
+        "Academic_Performance_GPA": 0
     },
     "invalid_numeric_values": {
         "Age": 0,
@@ -48,16 +48,12 @@
         "Negative": 165
     },
     "categorical_distribution": {
-        "Gender": {
-            "Female": 2234,
-            "Male": 2051,
-            "Non-Binary": 122,
-            "Prefer not to say": 93
-        },
-        "Device_Type": {
-            "Smartphone": 3775,
-            "Laptop/PC": 596,
-            "Tablet": 129
+        "Social_Comparison_Frequency": {
+            "Sometimes": 1594,
+            "Frequently": 1248,
+            "Rarely": 766,
+            "Always": 632,
+            "Never": 260
         },
         "Primary_Platform": {
             "Instagram": 1453,
@@ -73,12 +69,16 @@
             "High School": 1477,
             "Postgraduate": 246
         },
-        "Social_Comparison_Frequency": {
-            "Sometimes": 1594,
-            "Frequently": 1248,
-            "Rarely": 766,
-            "Always": 632,
-            "Never": 260
+        "Gender": {
+            "Female": 2234,
+            "Male": 2051,
+            "Non-Binary": 122,
+            "Prefer not to say": 93
+        },
+        "Device_Type": {
+            "Smartphone": 3775,
+            "Laptop/PC": 596,
+            "Tablet": 129
         }
     },
     "rows_after_cleaning": 4500,
