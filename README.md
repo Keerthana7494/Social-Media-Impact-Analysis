@@ -1,168 +1,462 @@
-# Social Media Impact on Student Life – MLOps Project
+# Social Media Impact on Student Life – Machine Learning Project
 
-A beginner-friendly end-to-end classification project using Python, scikit-learn, Streamlit and MLflow.
+An end-to-end machine learning application that explores the relationship between students' social media usage, sleep, wellbeing and academic-related attributes, and predicts the dataset's `Overall_Impact` category.
 
-## 1. What this project does
+The project includes data validation and cleaning, exploratory data analysis (EDA), feature engineering, model comparison, hyperparameter tuning, evaluation, model versioning, experiment tracking with MLflow, and an interactive Streamlit application.
 
-1. Loads the supplied student social-media dataset.
-2. Checks missing values, duplicates, data types and feature ranges.
-3. Cleans text and numeric fields; invalid domain values become missing.
-4. Uses median/mode imputers inside a reusable scikit-learn pipeline.
-5. Creates simple features:
-   - Total_Usage_Hours
-   - Usage_to_Sleep_Ratio
-   - Late_Night_Usage_Hours_Flag
-6. Visualizes numerical feature distributions, target balance and correlations.
-7. Compares Logistic Regression, Random Forest and Extra Trees.
-8. Selects the model using Macro F1 (with Balanced Accuracy as a tie-breaker).
-9. Evaluates the selected model with a classification report and confusion matrix.
-10. Tracks each experiment in MLflow.
-11. Saves versioned models and reports.
-12. Provides a Streamlit dashboard and a prediction form.
+> **Important:** This is an educational machine learning project. Its predictions are based on patterns in the supplied dataset. They are not medical, psychological, academic or other professional assessments, and should not be used to make decisions about individual students.
 
-## 2. Project structure
+---
+
+## Table of Contents
+
+- [Project Overview](#project-overview)
+- [Application Features](#application-features)
+- [Technology Stack](#technology-stack)
+- [Dataset](#dataset)
+- [Machine Learning Workflow](#machine-learning-workflow)
+- [Algorithms Compared](#algorithms-compared)
+- [Model Evaluation](#model-evaluation)
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [Run the Application](#run-the-application)
+- [Train and Compare Models](#train-and-compare-models)
+- [Make a Prediction](#make-a-prediction)
+- [MLflow Experiment Tracking](#mlflow-experiment-tracking)
+- [Run Tests](#run-tests)
+- [Generated Files and Reports](#generated-files-and-reports)
+- [Limitations and Future Improvements](#limitations-and-future-improvements)
+- [Disclaimer](#disclaimer)
+
+---
+
+## Project Overview
+
+Social media is part of many students' everyday lives. Usage patterns can occur alongside differences in sleep, stress, social comparison and academic performance.
+
+This project uses a structured dataset of **4,500 records and 16 original columns** to train classification models that predict one of three target categories in the `Overall_Impact` column:
+
+| Target class | Description |
+|---|---|
+| `Beneficial` | The record is labelled as having a beneficial overall impact. |
+| `Neutral` | The record is labelled as having a neutral overall impact. |
+| `Negative` | The record is labelled as having a negative overall impact. |
+
+The application allows users to inspect the dataset, review cleaning and EDA outputs, train and compare classification algorithms, and enter student-related attributes to obtain a model prediction and class probabilities.
+
+## Application Features
+
+The Streamlit application is organized into four sections:
+
+### 1. Data Overview
+
+- Dataset summary and preview.
+- Column data types and missing-value information.
+- Target class distribution.
+
+### 2. Cleaning & EDA
+
+- Before-and-after data cleaning review.
+- Missing-value inspection and imputation information.
+- Feature engineering preview.
+- Exploratory data analysis visualizations.
+
+### 3. Train Models
+
+- Comparison of five classification algorithms.
+- Model evaluation using multiple classification metrics.
+- Hyperparameter tuning with `GridSearchCV`.
+- Selection using Macro F1, with Balanced Accuracy as the tie-breaker.
+- Saving trained model versions and metadata.
+- MLflow experiment tracking.
+
+### 4. Prediction
+
+- Form-based input for student and social-media-related attributes.
+- Loads the model referenced by `models/latest_model.json`.
+- Displays the predicted `Overall_Impact` class and class probabilities.
+- Stores prediction history in a CSV file.
+
+## Technology Stack
+
+| Area | Tools / Libraries |
+|---|---|
+| Programming language | Python |
+| Data handling | Pandas, NumPy |
+| Machine learning | Scikit-learn |
+| Data visualization | Matplotlib, Seaborn |
+| Interactive application | Streamlit |
+| Experiment tracking | MLflow |
+| Model persistence | Joblib |
+| Reports and data files | CSV, JSON |
+| Testing | Pytest |
+
+## Dataset
+
+**File:** `data/Social_media_impact_on_life.csv`
+
+**Shape:** 4,500 rows × 16 columns (original dataset)
+
+### Dataset columns
+
+| Column | Description / role |
+|---|---|
+| `Student_ID` | Student record identifier; excluded from model features. |
+| `Age` | Age value in the dataset. |
+| `Gender` | Gender category. |
+| `Academic_Level` | Student's academic level. |
+| `Primary_Platform` | Primary social media platform. |
+| `Daily_Usage_Hours` | Daily social media usage hours. |
+| `Weekend_Extra_Hours` | Additional usage hours on weekends. |
+| `Device_Type` | Device category. |
+| `Sleep_Duration_Hours` | Sleep duration in hours. |
+| `Sleep_Quality_Score` | Sleep quality score. |
+| `Late_Night_Usage` | Indicates late-night usage. |
+| `Social_Comparison_Frequency` | Frequency of social comparison. |
+| `Perceived_Stress_Score` | Perceived stress score. |
+| `Mental_Health_Index` | Mental health index value. |
+| `Academic_Performance_GPA` | Academic performance GPA value. |
+| `Overall_Impact` | Target class to predict. |
+
+### Target distribution in the supplied dataset
+
+| Class | Records | Approximate share |
+|---|---:|---:|
+| Beneficial | 3,681 | 81.8% |
+| Neutral | 654 | 14.5% |
+| Negative | 165 | 3.7% |
+| **Total** | **4,500** | **100%** |
+
+The target classes are imbalanced. For this reason, the project considers Macro F1 and Balanced Accuracy in addition to accuracy.
+
+> **Dataset provenance:** The supplied project files do not establish the dataset's original collection source or whether the records are synthetic, survey-based or otherwise collected. Add the original source, license, collection method and usage permissions here if those details are available. Do not describe the data as real-world or anonymized unless that is verified.
+
+## Machine Learning Workflow
+
+The project follows this workflow:
+
+1. **Load data** – read the CSV dataset.
+2. **Validate schema** – check required columns and expected data structure.
+3. **Clean data** – inspect duplicates, missing values, invalid values and numeric ranges.
+4. **Engineer features** – derive additional usage-related features.
+5. **Separate features and target** – use `Overall_Impact` as the target and exclude `Student_ID` from model inputs.
+6. **Split the dataset** – create training, validation and test subsets using the project's configured split logic.
+7. **Build preprocessing pipeline** – process numeric and categorical columns separately.
+8. **Compare algorithms** – evaluate the five candidate classifiers.
+9. **Tune the selected model** – use GridSearchCV with stratified cross-validation.
+10. **Evaluate** – report performance on the held-out test data.
+11. **Save artifacts** – persist the fitted pipeline, metadata and latest-model pointer.
+12. **Predict** – load the saved pipeline in the Streamlit prediction section.
+
+### Feature engineering
+
+The data pipeline creates the following derived features:
+
+| Engineered feature | Description |
+|---|---|
+| `Total_Usage_Hours` | Daily usage hours plus weekend extra usage hours. |
+| `Usage_to_Sleep_Ratio` | Daily usage hours divided by sleep duration, with the implementation's handling for invalid or zero values. |
+| `Late_Night_Usage_Hours_Flag` | Daily usage hours multiplied by the late-night usage indicator. |
+
+### Preprocessing
+
+The Scikit-learn preprocessing pipeline applies separate transformations to numeric and categorical features.
+
+**Numeric features**
+
+- Missing values are imputed using the median.
+- Features are scaled using `StandardScaler`.
+
+**Categorical features**
+
+- Missing values are imputed using the most frequent value.
+- Categories are encoded using `OneHotEncoder`.
+
+The preprocessing steps are part of the fitted model pipeline so the same transformations can be applied during prediction.
+
+## Algorithms Compared
+
+The application compares these five classifiers:
+
+| Algorithm | Purpose |
+|---|---|
+| Dummy Classifier | Baseline for comparison. |
+| Logistic Regression | Linear classification baseline. |
+| Decision Tree | Rule-based classification model. |
+| Random Forest | Ensemble of decision trees. |
+| Gradient Boosting | Sequential boosting-based classifier. |
+
+### Model selection and tuning
+
+- **Primary selection metric:** Macro F1.
+- **Tie-breaker:** Balanced Accuracy.
+- **Tuning method:** `GridSearchCV`.
+- **Cross-validation:** `StratifiedKFold` with 3 folds.
+- **Cross-validation scoring:** `f1_macro`.
+
+The saved best model in the supplied project is **Gradient Boosting** (model version 13).
+
+## Model Evaluation
+
+The following metrics are recorded in `reports/best_model_metrics.json` for the saved model. These are the results stored in the supplied project artifacts; they are not a claim of independently reproduced results.
+
+### Held-out test results
+
+| Metric | Score |
+|---|---:|
+| Accuracy | 97.56% |
+| Balanced Accuracy | 94.02% |
+| Macro F1 | 94.27% |
+| Weighted F1 | 97.56% |
+
+### Per-class test results
+
+| Class | Precision | Recall | F1-score | Support |
+|---|---:|---:|---:|---:|
+| Beneficial | 98.91% | 98.78% | 98.84% | 736 |
+| Negative | 93.75% | 90.91% | 92.31% | 33 |
+| Neutral | 90.98% | 92.37% | 91.67% | 131 |
+
+### Best Gradient Boosting hyperparameters
+
+The saved tuning report records these values:
+
+| Parameter | Value |
+|---|---:|
+| `learning_rate` | `0.05` |
+| `max_depth` | `3` |
+| `max_features` | `null` |
+| `min_samples_leaf` | `3` |
+| `min_samples_split` | `10` |
+| `n_estimators` | `150` |
+| `subsample` | `0.7` |
+
+### Evaluation note
+
+The saved report records a Macro F1 score of approximately **99.96%** on the combined training-plus-validation data and **94.27%** on the held-out test data, a gap of approximately **5.69 percentage points**. The report flags this as a moderate training-test gap. The dataset's class imbalance and the way the target was created should also be investigated before interpreting these scores as evidence of real-world predictive performance.
+
+## Project Structure
 
 ```text
-social_media_mlops_project/
-├── app.py
-├── requirements.txt
-├── README.md
+SMP/
+│
+├── app.py                              # Streamlit application
+├── requirements.txt                   # Runtime dependencies
+├── requirements-dev.txt               # Development and test dependencies
+├── .gitignore
+│
 ├── data/
-│   └── Social_media_impact_on_life.csv
+│   └── Social_media_impact_on_life.csv # Input dataset
+│
 ├── src/
 │   ├── __init__.py
-│   ├── config.py
-│   ├── data.py
-│   ├── visualizations.py
-│   └── train.py
+│   ├── config.py                       # Project paths and configuration
+│   ├── data.py                         # Loading, validation, cleaning, features
+│   ├── train.py                        # Model training and tuning workflow
+│   └── visualizations.py               # EDA and evaluation charts
+│
+├── tests/
+│   └── test_data_pipeline.py           # Data pipeline tests
+│
 ├── models/
-│   ├── model_v1.joblib
-│   ├── model_v1_metadata.json
-│   └── latest_model.json
+│   ├── latest_model.json               # Pointer to the latest saved model
+│   ├── model_v*.joblib                 # Saved model pipelines
+│   └── model_v*_metadata.json          # Model metrics and metadata
+│
+├── predictions/
+│   └── prediction_history.csv           # Saved prediction history
+│
 ├── reports/
-│   ├── cleaned_dataset.csv
-│   ├── data_cleaning_report.json
-│   ├── model_comparison.csv
+│   ├── best_hyperparameters.json
+│   ├── best_model_metrics.json
 │   ├── classification_report.json
+│   ├── model_comparison.csv
+│   ├── data_cleaning_report.json
+│   ├── hyperparameter_tuning_results.csv
 │   ├── test_predictions.csv
-│   └── figures/
-└── mlruns/ or mlflow.db
+│   └── figures/                        # Generated visualizations
+│
+└── mlflow.db                           # Local MLflow tracking database
 ```
 
-The `models`, `reports`, and MLflow tracking files are created when you run the pipeline.
+Some folders and files are generated when the application or training workflow runs. The exact contents can therefore change over time.
 
-## 3. Requirements
+## Installation
 
-- Python 3.10 or newer
-- VS Code or another Python IDE
-- Internet connection for installing packages (not needed after installation)
+### Prerequisites
 
-## 4. Windows setup (VS Code)
+- Python installed on your computer.
+- Git (optional, for cloning the repository).
+- A terminal such as Command Prompt, PowerShell or the VS Code terminal.
 
-Open the project folder in VS Code. Open Terminal and run:
+Python 3.10 or newer is a practical environment choice for this project. The dependency versions are specified in `requirements.txt`.
 
-### Step 1 – Create virtual environment
+### 1. Clone the repository
+
+Replace the URL below with your GitHub repository URL:
+
+```bash
+git clone https://github.com/<your-username>/<your-repository>.git
+cd <your-repository>
+```
+
+Alternatively, download the repository as a ZIP file and extract it.
+
+### 2. Create a virtual environment
+
+**Windows (PowerShell / Command Prompt):**
 
 ```bash
 python -m venv .venv
+.venv\Scripts\activate
 ```
 
-### Step 2 – Activate it
+**macOS / Linux:**
 
-PowerShell:
-```powershell
-.venv\Scripts\Activate.ps1
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
-If PowerShell blocks activation, use Command Prompt:
-```cmd
-.venv\Scripts\activate.bat
-```
-
-### Step 3 – Install libraries
+### 3. Upgrade pip
 
 ```bash
 python -m pip install --upgrade pip
+```
+
+### 4. Install dependencies
+
+For normal application use:
+
+```bash
 pip install -r requirements.txt
 ```
 
-### Step 4 – Run the Streamlit application
+To install the testing dependency as well:
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+## Run the Application
+
+From the project root directory, run:
 
 ```bash
 streamlit run app.py
 ```
 
-The browser opens the dashboard. Go to **Train Models** and click **Run complete training pipeline**.
-
-## 5. Run training without Streamlit
-
-From the project root:
-
-```bash
-python -m src.train
-```
-
-## 6. View MLflow experiments
-
-Open a second terminal in the project folder, activate the same virtual environment, then run:
-
-```bash
-mlflow ui
-```
-
-Open:
-
-http://localhost:5000
-
-Each candidate model is logged as a separate MLflow run with parameters, metrics and its fitted pipeline.
-
-## 7. Reports generated
-
-| Output | Purpose |
-|---|---|
-| cleaned_dataset.csv | Cleaned source records |
-| data_cleaning_report.json | Rows removed and cleaning summary |
-| numeric_feature_distributions.png | Feature distribution charts |
-| target_distribution.png | Class imbalance visualization |
-| correlation_heatmap.png | Numerical feature correlations |
-| model_comparison.csv | Model metrics comparison |
-| model_comparison.png | Macro F1 comparison chart |
-| classification_report.json | Precision, recall and F1 by class |
-| confusion_matrix.png | Correct and incorrect predictions |
-| test_predictions.csv | Actual vs predicted test labels |
-
-## 8. Why Macro F1?
-
-The target has imbalanced classes. Accuracy alone can look high when a model mainly predicts the majority class. Macro F1 calculates F1 for each class and gives every class equal weight. This makes it a more useful primary selection metric for this dataset.
-
-The best model is selected from the test-set comparison in this educational project. For a stricter production evaluation, use a validation set or cross-validation for model selection and reserve a final untouched test set for one-time evaluation.
-
-## 9. Model versioning
-
-Every training run saves the next available version:
+Streamlit will display a local URL in the terminal, normally:
 
 ```text
-models/model_v1.joblib
-models/model_v2.joblib
-models/model_v3.joblib
+http://localhost:8501
 ```
 
-`latest_model.json` points to the latest saved version. Metadata records the model name, training time, target, feature names and Macro F1.
+Open that address in your browser.
 
-## 10. Important notes
+**Important:** Keep the project folders (`data`, `src`, `models`, `reports` and `predictions`) in their expected relative locations. The application uses paths defined in `src/config.py`.
 
-- Missing feature values are imputed by the fitted preprocessing pipeline. This prevents the model from receiving null feature values.
-- Rows with missing target labels cannot be used for supervised learning and are excluded.
-- Extreme but valid values are not automatically deleted.
-- `Student_ID` is excluded from model training.
-- The dataset is observational. Predictions show learned associations, not proof that social media causes a particular mental-health or academic outcome.
-- Do not use this model to make medical or high-stakes decisions.
-- Do not upload real student personal data to a public repository.
+## Train and Compare Models
 
-## 11. Resume description
+1. Start the application using `streamlit run app.py`.
+2. Open the **Train Models** tab.
+3. Follow the controls in that section to run model comparison and tuning.
+4. Review the validation metrics and selected model.
+5. The training workflow saves model files, metadata and reports under `models/` and `reports/` and records experiments through MLflow.
+6. The prediction section uses the model referenced by `models/latest_model.json`.
 
-**Social Media Impact on Student Life – End-to-End MLOps Classification**
+The supplied ZIP already contains saved model artifacts, including `model_v13.joblib`, and a `latest_model.json` pointer. Therefore, a prediction can use the saved model if the referenced files are present and compatible with the installed Python and library versions. Retraining is not required merely to inspect the existing saved model.
 
-Built an end-to-end machine learning application to classify the overall impact of social media usage on students. Implemented data validation, preprocessing, feature engineering, exploratory visualizations, model benchmarking, evaluation, MLflow experiment tracking, versioned model persistence and an interactive Streamlit dashboard using Python and scikit-learn.
+## Make a Prediction
 
-**Technologies:** Python, Pandas, NumPy, Matplotlib, Seaborn, Scikit-learn, MLflow, Streamlit, Joblib, Git.
+1. Run the Streamlit application.
+2. Open the **Prediction** tab.
+3. Enter the requested student, social media usage, sleep, wellbeing and academic-related values.
+4. Submit the form.
+5. Review the predicted impact class and the displayed class probabilities.
+6. If prediction history is enabled for the session, review the saved records in `predictions/prediction_history.csv`.
+
+The prediction form must use the same input meaning and units expected by the training data. A prediction is a model output, not a professional evaluation of a student.
+
+## MLflow Experiment Tracking
+
+The project includes MLflow tracking and a local tracking database named `mlflow.db` in the project root.
+
+If the tracking database is configured as the MLflow backend store, you can inspect experiments with:
+
+```bash
+mlflow ui --backend-store-uri sqlite:///mlflow.db
+```
+
+Then open the local MLflow URL printed by the command (commonly `http://127.0.0.1:5000`).
+
+If MLflow reports that it cannot find the database or experiments, check the tracking URI configured by the training code and run the command from the project root. MLflow's tracking configuration must match the URI used by the application.
+
+## Run Tests
+
+Install the development dependencies if you have not already:
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+Run the tests from the project root:
+
+```bash
+pytest -v
+```
+
+The supplied test suite includes tests for the data pipeline. It does not represent complete end-to-end testing of every Streamlit page, model-training scenario or deployment environment.
+
+## Generated Files and Reports
+
+The project stores useful outputs in these locations:
+
+| Location | Contents |
+|---|---|
+| `models/` | Serialized model pipelines, metadata and latest-model pointer. |
+| `reports/` | Model metrics, classification report, tuning results and data-cleaning report. |
+| `reports/figures/` | Target distribution, feature distributions, correlation heatmap, model comparison, confusion matrix and other charts. |
+| `predictions/` | Prediction history CSV. |
+| `mlflow.db` | Local MLflow tracking database. |
+
+You can add selected report images to this README using relative Markdown links, for example:
+
+```markdown
+![Model comparison](reports/figures/model_comparison.png)
+![Confusion matrix](reports/figures/confusion_matrix.png)
+![Target distribution](reports/figures/target_distribution.png)
+```
+
+## Limitations and Future Improvements
+
+Potential next steps for this project include:
+
+- Verify and document the dataset's provenance, license and collection methodology.
+- Investigate how `Overall_Impact` was defined and check for target leakage from input features.
+- Evaluate performance with repeated stratified cross-validation and additional independent data.
+- Continue monitoring minority-class precision, recall and F1 because the target distribution is imbalanced.
+- Add more unit and integration tests for training, model loading, prediction and the user interface.
+- Add a dedicated prediction API if the model needs to be consumed by other applications.
+- Store prediction history in a database with appropriate access control and retention rules.
+- Containerize the application and define a repeatable deployment workflow.
+- Add model monitoring and a documented model update process.
+- Improve accessibility and provide clear explanations of model limitations to application users.
+
+## Disclaimer
+
+This project is intended for learning, experimentation and demonstration of a machine learning workflow. The dataset's provenance and representativeness must be verified before making claims about general student populations. Model predictions can be inaccurate or biased and must not be treated as diagnoses, professional advice or definitive judgments about any student.
+
+---
+
+## Author
+
+**Keerthana D**
+
+GitHub: [Add your GitHub profile URL]
+
+Project repository: [Add your repository URL]
+
+---
+
+If you find this project useful for learning, feel free to explore the code, run the workflow and suggest improvements.
