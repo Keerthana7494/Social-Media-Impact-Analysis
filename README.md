@@ -420,13 +420,9 @@ The project stores useful outputs in these locations:
 | `predictions/` | Prediction history CSV. |
 | `mlflow.db` | Local MLflow tracking database. |
 
-You can add selected report images to this README using relative Markdown links, for example:
-
-```markdown
+# Screenshots
+## Model Comparison
 ![Model comparison](reports/figures/model_comparison.png)
-![Confusion matrix](reports/figures/confusion_matrix.png)
-![Target distribution](reports/figures/target_distribution.png)
-```
 
 ## Limitations and Future Improvements
 
