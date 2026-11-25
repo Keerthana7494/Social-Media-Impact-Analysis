@@ -449,9 +449,9 @@ This project is intended for learning, experimentation and demonstration of a ma
 
 **Keerthana D**
 
-GitHub: [Add your GitHub profile URL]
+GitHub: [https://github.com/Keerthana7494]
 
-Project repository: [Add your repository URL]
+Project repository: [https://github.com/Keerthana7494/Social-Media-Impact-Analysis.git]
 
 ---
 
